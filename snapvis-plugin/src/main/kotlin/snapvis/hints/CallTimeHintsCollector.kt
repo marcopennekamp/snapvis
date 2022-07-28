@@ -28,10 +28,10 @@ class CallTimeHintsCollector(
                 val className = getContainingClassName(element, element.containingKtFile)
                 val methodName = element.getCallNameExpression()?.getReferencedName()
                 if (className != null && methodName != null) {
-                    val metricsService = project.getService(MetricsService::class.java)
-                    val methodCallTime = metricsService.callMetrics.get(className).get(element.getLineNumber() + 1, methodName)
-                    if (methodCallTime != null) {
-                        addHint(element, sink, methodCallTime.timePerCall)
+                    project.getService(MetricsService::class.java).callMetrics?.let { callMetrics ->
+                        callMetrics.get(className).get(element.getLineNumber() + 1, methodName)?.let {
+                            methodCallTime -> addHint(element, sink, methodCallTime.timePerCall)
+                        }
                     }
                 }
             }

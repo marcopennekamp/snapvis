@@ -19,8 +19,7 @@ class LoadSnapshotAction : AnAction() {
     }
 
     override fun actionPerformed(event: AnActionEvent) {
-        val project = event.project
-        if (project != null) {
+        event.project?.let { project ->
             chooseSnapshot(project) { extractSnapshot(project, it) }
         }
     }
