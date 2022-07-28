@@ -13,8 +13,6 @@ import snapvis.util.commonPrefixSize
 import snapvis.util.normalizeClassName
 import java.nio.charset.Charset
 
-// TODO: Write a test for this extractor.
-
 object JfrExtractor : Extractor {
     /**
      * Extracts method execution timings from the JFR file [fileName].
@@ -121,7 +119,6 @@ private class JfrExtractorImpl(val reader: JfrReader) {
         return totalsByCall
     }
 
-    // TODO: Add a simple test.
     private fun reformat(stackTrace: StackTrace): MethodCallStack {
         val entries = ArrayList<MethodCall>(stackTrace.methods.size)
 
@@ -146,7 +143,6 @@ private class JfrExtractorImpl(val reader: JfrReader) {
         return MethodCallStack(entries)
     }
 
-    // TODO: Add a simple test.
     private fun convertToMetrics(totalCallTimes: Map<MethodCall, MethodCallTotals>): CallMetrics {
         val metrics = CallMetrics()
 
@@ -167,9 +163,7 @@ private class JfrExtractorImpl(val reader: JfrReader) {
 
     private fun isNativeMethod(methodId: Long, methodType: Byte): Boolean {
         val className = getMethodClassName(methodId)
-        return methodType >= FlameGraph.FRAME_NATIVE && methodType <= FlameGraph.FRAME_KERNEL
-                //|| className == null // TODO: Needed?
-                || className.isEmpty()
+        return methodType >= FlameGraph.FRAME_NATIVE && methodType <= FlameGraph.FRAME_KERNEL || className.isEmpty()
     }
 
     private fun getMethodName(methodId: Long): String = nameAsString(reader.symbols[reader.methods[methodId].name])
