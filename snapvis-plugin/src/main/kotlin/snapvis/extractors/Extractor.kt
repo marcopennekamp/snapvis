@@ -21,4 +21,9 @@ object Extractors {
      * Supported extensions: jfr.
      */
     fun forExtension(extension: String): Extractor? = extractorByExtension[extension]
+
+    /**
+     * Whether there is an extractor for lower-case [extension].
+     */
+    fun supportsExtension(extension: String): Boolean = extractorByExtension.containsKey(extension)
 }
