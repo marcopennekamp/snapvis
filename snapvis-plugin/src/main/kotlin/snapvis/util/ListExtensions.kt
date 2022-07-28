@@ -2,8 +2,6 @@ package snapvis.util
 
 import kotlin.math.min
 
-// TODO: Write simple test.
-
 /**
  * Returns the size of the common prefix which [this] and [other] share. For example, the common prefix size of two
  * lists `listOf(1, 2, 3, 4)` and `listOf(1, 2, 5, 4)` is 2.

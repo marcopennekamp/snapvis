@@ -21,8 +21,6 @@ import org.jetbrains.kotlin.psi.psiUtil.containingClass
  *
  * As mentioned in the tradeoffs (see README), this function was written with simplicity in mind and will not
  * necessarily cover all edge cases.
- *
- * TODO: Test this.
  */
 fun normalizeClassName(jvmClassName: String): String {
     val parts = jvmClassName.replace('/', '.').split('.')
@@ -40,7 +38,7 @@ fun normalizeClassName(jvmClassName: String): String {
  *
  * See also: [Package-level functions](https://kotlinlang.org/docs/java-to-kotlin-interop.html#package-level-functions).
  *
- * TODO: Test this?
+ * TODO: Test this with a plugin test.
  * TODO: Maybe use components from "Kotlin show bytecode" to improve disambiguation.
  */
 fun getContainingClassName(expression: KtExpression, file: KtFile): String? {

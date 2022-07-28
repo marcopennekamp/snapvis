@@ -22,6 +22,7 @@ intellij {
 
 dependencies {
     implementation(files("libs/async-profiler-converter-2.8.3.jar"))
+    testImplementation(kotlin("test"))
 }
 
 tasks {
@@ -32,6 +33,10 @@ tasks {
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = "11"
+    }
+
+    test {
+        useJUnitPlatform()
     }
 
     patchPluginXml {
