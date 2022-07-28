@@ -7,6 +7,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.VirtualFile
+import snapvis.SnapvisBundle
 import snapvis.extractors.Extractors
 import snapvis.metrics.MetricsService
 
@@ -39,15 +40,15 @@ class LoadSnapshotAction : AnAction() {
             metricsService.callMetrics = extractor.extract(file.path)
             Messages.showMessageDialog(
                 project,
-                "The snapshot has been loaded successfully. Hints should now become available.", // TODO: i18n.
-                "Snapshot Loaded", // TODO: i18n.
+                SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.success.message"),
+                SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.success.title"),
                 Messages.getInformationIcon(),
             )
         } else {
             Messages.showMessageDialog(
                 project,
-                "Cannot load a CPU snapshot with a ${file.extension} file extension.", // TODO: i18n.
-                "Unknown Snapshot Format", // TODO: i18n.
+                SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.unknown_format.message", file.extension),
+                SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.unknown_format.title"),
                 Messages.getErrorIcon(),
             )
         }
