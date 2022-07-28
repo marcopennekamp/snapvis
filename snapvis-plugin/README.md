@@ -17,7 +17,8 @@ Features:
 - Load a `.jfr` CPU snapshot created by e.g. async-profiler or IntelliJ.
 - Annotate each method call with an inlay hint showing the average run time.
 - The Tools->Snapvis menu provides the following actions:
-  - *Load CPU Snapshot:* Select and load a `.jfr` snapshot.
+  - *Load Snapshot:* Select and load a `.jfr` snapshot.
+  - *Clear Snapshot:* Clear the current snapshot data and remove all method call time hints.
 
 
 Choices:

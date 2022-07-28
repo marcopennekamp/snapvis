@@ -35,6 +35,7 @@
         <group id="snapvis.actions.SnapvisGroup" text="Snapvis" popup="true">
             <add-to-group group-id="ToolsMenu" anchor="last" />
             <action id="snapvis.actions.LoadSnapshotAction" class="snapvis.actions.LoadSnapshotAction" />
+            <action id="snapvis.actions.ClearSnapshotAction" class="snapvis.actions.ClearSnapshotAction" />
         </group>
     </actions>
 </idea-plugin>
