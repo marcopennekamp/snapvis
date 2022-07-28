@@ -37,7 +37,6 @@ class LoadSnapshotAction : AnAction() {
         if (extractor != null) {
             val metricsService = project.getService(MetricsService::class.java)
             metricsService.callMetrics = extractor.extract(file.path)
-            // TODO: Invalidate / reload all inlay hints...
             Messages.showMessageDialog(
                 project,
                 "The snapshot has been loaded successfully. Hints should now become available.", // TODO: i18n.
