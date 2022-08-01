@@ -33,23 +33,34 @@ class LoadSnapshotAction : AnAction() {
     }
 
     private fun extractSnapshot(project: Project, file: VirtualFile) {
-        val extractor = Extractors.forExtension(file.extension ?: "")
-        if (extractor != null) {
-            val metricsService = project.getService(MetricsService::class.java)
-            metricsService.callMetrics = extractor.extract(file.path)
+        if (!file.exists()) {
             Messages.showMessageDialog(
                 project,
-                SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.success.message"),
-                SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.success.title"),
-                Messages.getInformationIcon(),
+                SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.file_not_found.message", file.path),
+                SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.file_not_found.title"),
+                Messages.getErrorIcon(),
             )
-        } else {
+            return
+        }
+
+        val extractor = Extractors.forExtension(file.extension ?: "")
+        if (extractor == null) {
             Messages.showMessageDialog(
                 project,
                 SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.unknown_format.message", file.extension),
                 SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.unknown_format.title"),
                 Messages.getErrorIcon(),
             )
+            return
         }
+
+        val metricsService = project.getService(MetricsService::class.java)
+        metricsService.callMetrics = extractor.extract(file.path)
+        Messages.showMessageDialog(
+            project,
+            SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.success.message"),
+            SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.success.title"),
+            Messages.getInformationIcon(),
+        )
     }
 }
