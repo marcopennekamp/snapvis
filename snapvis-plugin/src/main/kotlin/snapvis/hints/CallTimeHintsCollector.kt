@@ -15,8 +15,6 @@ import snapvis.metrics.MetricsService
 import snapvis.util.Nanoseconds
 import snapvis.util.getContainingClassName
 
-// TODO: Test this.
-
 @Suppress("UnstableApiUsage")
 class CallTimeHintsCollector(
     private val project: Project,

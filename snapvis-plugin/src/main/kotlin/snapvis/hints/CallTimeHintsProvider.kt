@@ -7,8 +7,6 @@ import com.intellij.ui.dsl.builder.panel
 import snapvis.SnapvisBundle
 import javax.swing.JComponent
 
-// TODO: Test this.
-
 @Suppress("UnstableApiUsage")
 class CallTimeHintsProvider : InlayHintsProvider<NoSettings> {
 

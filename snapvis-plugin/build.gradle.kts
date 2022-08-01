@@ -35,10 +35,6 @@ tasks {
         kotlinOptions.jvmTarget = "11"
     }
 
-    test {
-        useJUnitPlatform()
-    }
-
     patchPluginXml {
         sinceBuild.set("212")
         untilBuild.set("222.*")

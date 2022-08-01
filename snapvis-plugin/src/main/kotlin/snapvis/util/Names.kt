@@ -38,7 +38,6 @@ fun normalizeClassName(jvmClassName: String): String {
  *
  * See also: [Package-level functions](https://kotlinlang.org/docs/java-to-kotlin-interop.html#package-level-functions).
  *
- * TODO: Test this with a plugin test.
  * TODO: Maybe use components from "Kotlin show bytecode" to improve disambiguation.
  */
 fun getContainingClassName(expression: KtExpression, file: KtFile): String? {
