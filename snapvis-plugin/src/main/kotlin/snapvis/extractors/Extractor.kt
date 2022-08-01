@@ -1,13 +1,14 @@
 package snapvis.extractors
 
 import snapvis.metrics.CallMetrics
+import java.nio.file.Path
 
 interface Extractor {
     /**
-     * Extracts profiling data from a file [fileName] and summarizes method execution time in the returned
+     * Extracts profiling data from a file [filePath] and summarizes method execution time in the returned
      * [CallMetrics].
      */
-    fun extract(fileName: String): CallMetrics
+    fun extract(filePath: Path): CallMetrics
 }
 
 object Extractors {

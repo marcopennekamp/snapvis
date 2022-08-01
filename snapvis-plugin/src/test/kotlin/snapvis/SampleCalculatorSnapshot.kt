@@ -1,12 +1,15 @@
 package snapvis
 
 import com.intellij.openapi.project.Project
+import snapvis.actions.getResourcePath
 import snapvis.extractors.Extractors
 import snapvis.metrics.CallMetrics
 import snapvis.metrics.MethodCallTime
 import snapvis.metrics.MetricsService
 import snapvis.metrics.getMetricsService
 import snapvis.util.Nanoseconds
+import java.nio.file.Path
+import kotlin.io.path.extension
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -14,12 +17,12 @@ import kotlin.test.assertNotNull
  * [SampleCalculatorSnapshot] helps several tests extract and verify the sample calculator snapshot.
  */
 object SampleCalculatorSnapshot {
+    val SNAPSHOT_FILE_PATH: Path = getResourcePath("calculator_snapshot.jfr")
+
     fun extract(): CallMetrics {
-        val fileName = javaClass.classLoader.getResource("calculator_snapshot.jfr")?.file
-        assertNotNull(fileName)
-        val extractor = Extractors.forExtension("jfr")
+        val extractor = Extractors.forExtension(SNAPSHOT_FILE_PATH.extension)
         assertNotNull(extractor)
-        return extractor.extract(fileName)
+        return extractor.extract(SNAPSHOT_FILE_PATH)
     }
 
     fun verifyMetrics(metrics: CallMetrics) {

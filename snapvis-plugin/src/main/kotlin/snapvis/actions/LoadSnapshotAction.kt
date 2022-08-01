@@ -12,6 +12,9 @@ import snapvis.extractors.Extractors
 import snapvis.metrics.getMetricsService
 
 // TODO: Write a simple test.
+import java.nio.file.Path
+import kotlin.io.path.exists
+import kotlin.io.path.extension
 
 class LoadSnapshotAction : AnAction() {
     override fun update(event: AnActionEvent) {
@@ -20,7 +23,7 @@ class LoadSnapshotAction : AnAction() {
 
     override fun actionPerformed(event: AnActionEvent) {
         event.project?.let { project ->
-            chooseSnapshot(project) { extractSnapshot(project, it) }
+            chooseSnapshot(project) { extractSnapshot(project, it.toNioPath()) }
         }
     }
 
@@ -32,29 +35,29 @@ class LoadSnapshotAction : AnAction() {
         FileChooser.chooseFile(descriptor, project, null, callback)
     }
 
-    private fun extractSnapshot(project: Project, file: VirtualFile) {
-        if (!file.exists()) {
+    fun extractSnapshot(project: Project, filePath: Path) {
+        if (!filePath.exists()) {
             Messages.showMessageDialog(
                 project,
-                SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.file_not_found.message", file.path),
+                SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.file_not_found.message", filePath),
                 SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.file_not_found.title"),
                 Messages.getErrorIcon(),
             )
             return
         }
 
-        val extractor = Extractors.forExtension(file.extension ?: "")
+        val extractor = Extractors.forExtension(filePath.extension)
         if (extractor == null) {
             Messages.showMessageDialog(
                 project,
-                SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.unknown_format.message", file.extension),
+                SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.unknown_format.message", filePath.extension),
                 SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.unknown_format.title"),
                 Messages.getErrorIcon(),
             )
             return
         }
 
-        project.getMetricsService().callMetrics = extractor.extract(file.path)
+        project.getMetricsService().callMetrics = extractor.extract(filePath)
         Messages.showMessageDialog(
             project,
             SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.success.message"),

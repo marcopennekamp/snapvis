@@ -12,10 +12,11 @@ import snapvis.util.Nanoseconds
 import snapvis.util.commonPrefixSize
 import snapvis.util.normalizeClassName
 import java.nio.charset.Charset
+import java.nio.file.Path
 
 object JfrExtractor : Extractor {
     /**
-     * Extracts method execution timings from the JFR file [fileName].
+     * Extracts method execution timings from the JFR file [filePath].
      *
      * The JFR format contains timing and allocation events and their associated information. In general, variable-size
      * data such as strings, methods, classes, etc. are held in metadata and constant tables. They are referred to via
@@ -39,7 +40,7 @@ object JfrExtractor : Extractor {
      * Both of these issues are remedied with a correctly chosen sampling interval. This choice strongly depends on the
      * program being profiled.
      */
-    override fun extract(fileName: String): CallMetrics = JfrReader(fileName).use { reader ->
+    override fun extract(filePath: Path): CallMetrics = JfrReader(filePath.toString()).use { reader ->
         JfrExtractorImpl(reader).extract()
     }
 }
