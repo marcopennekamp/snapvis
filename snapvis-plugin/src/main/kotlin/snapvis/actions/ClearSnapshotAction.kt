@@ -2,7 +2,6 @@ package snapvis.actions
 
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-// TODO: Write a simple test.
 import snapvis.metrics.getMetricsService
 
 class ClearSnapshotAction : AnAction() {

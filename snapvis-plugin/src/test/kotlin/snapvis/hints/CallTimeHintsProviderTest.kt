@@ -11,11 +11,11 @@ import kotlin.test.Test
 class CallTimeHintsProviderTest : InlayHintsProviderTestCase() {
     override fun setUp() {
         super.setUp()
-        SampleCalculatorSnapshot.setUp(project)
+        SampleCalculatorSnapshot.load(project)
     }
 
     override fun tearDown() {
-        SampleCalculatorSnapshot.tearDown(project)
+        SampleCalculatorSnapshot.clear(project)
         super.tearDown()
     }
 

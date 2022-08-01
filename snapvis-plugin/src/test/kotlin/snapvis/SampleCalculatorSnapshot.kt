@@ -40,9 +40,9 @@ object SampleCalculatorSnapshot {
     }
 
     /**
-     * Sets up the calculator snapshot in [MetricsService].
+     * Loads the calculator snapshot into [MetricsService].
      */
-    fun setUp(project: Project) {
+    fun load(project: Project) {
         val metricsService = project.getMetricsService()
         assertNotNull(metricsService)
         val metrics = extract()
@@ -52,7 +52,7 @@ object SampleCalculatorSnapshot {
     /**
      * Removes the calculator snapshot metrics from [MetricsService].
      */
-    fun tearDown(project: Project) {
+    fun clear(project: Project) {
         val metricsService = project.getMetricsService()
         assertNotNull(metricsService)
         metricsService.callMetrics = null
