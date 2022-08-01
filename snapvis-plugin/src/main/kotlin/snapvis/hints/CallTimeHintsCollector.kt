@@ -11,7 +11,7 @@ import org.jetbrains.kotlin.idea.core.util.getLineNumber
 import org.jetbrains.kotlin.psi.KtCallExpression
 import org.jetbrains.kotlin.psi.psiUtil.endOffset
 import org.jetbrains.kotlin.psi.psiUtil.getCallNameExpression
-import snapvis.metrics.MetricsService
+import snapvis.metrics.getMetricsService
 import snapvis.util.Nanoseconds
 import snapvis.util.getContainingClassName
 
@@ -26,7 +26,7 @@ class CallTimeHintsCollector(
                 val className = getContainingClassName(element, element.containingKtFile)
                 val methodName = element.getCallNameExpression()?.getReferencedName()
                 if (className != null && methodName != null) {
-                    project.getService(MetricsService::class.java).callMetrics?.let { callMetrics ->
+                    project.getMetricsService().callMetrics?.let { callMetrics ->
                         callMetrics.get(className).get(element.getLineNumber() + 1, methodName)?.let {
                             methodCallTime -> addHint(element, sink, methodCallTime.timePerCall)
                         }

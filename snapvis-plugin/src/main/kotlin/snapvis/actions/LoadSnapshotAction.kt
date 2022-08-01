@@ -9,7 +9,7 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.VirtualFile
 import snapvis.SnapvisBundle
 import snapvis.extractors.Extractors
-import snapvis.metrics.MetricsService
+import snapvis.metrics.getMetricsService
 
 // TODO: Write a simple test.
 
@@ -54,8 +54,7 @@ class LoadSnapshotAction : AnAction() {
             return
         }
 
-        val metricsService = project.getService(MetricsService::class.java)
-        metricsService.callMetrics = extractor.extract(file.path)
+        project.getMetricsService().callMetrics = extractor.extract(file.path)
         Messages.showMessageDialog(
             project,
             SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.success.message"),

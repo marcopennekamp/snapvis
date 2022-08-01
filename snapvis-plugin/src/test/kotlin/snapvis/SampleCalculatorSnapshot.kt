@@ -5,6 +5,7 @@ import snapvis.extractors.Extractors
 import snapvis.metrics.CallMetrics
 import snapvis.metrics.MethodCallTime
 import snapvis.metrics.MetricsService
+import snapvis.metrics.getMetricsService
 import snapvis.util.Nanoseconds
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -42,7 +43,7 @@ object SampleCalculatorSnapshot {
      * Sets up the calculator snapshot in [MetricsService].
      */
     fun setUp(project: Project) {
-        val metricsService = project.getService(MetricsService::class.java)
+        val metricsService = project.getMetricsService()
         assertNotNull(metricsService)
         val metrics = extract()
         metricsService.callMetrics = metrics
@@ -52,7 +53,7 @@ object SampleCalculatorSnapshot {
      * Removes the calculator snapshot metrics from [MetricsService].
      */
     fun tearDown(project: Project) {
-        val metricsService = project.getService(MetricsService::class.java)
+        val metricsService = project.getMetricsService()
         assertNotNull(metricsService)
         metricsService.callMetrics = null
     }

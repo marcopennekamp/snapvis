@@ -22,3 +22,5 @@ class MetricsService(val project: Project) {
             CallTimeHints.reload()
         }
 }
+
+fun Project.getMetricsService(): MetricsService = this.getService(MetricsService::class.java)
