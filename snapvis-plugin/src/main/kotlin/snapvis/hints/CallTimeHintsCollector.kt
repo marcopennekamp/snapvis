@@ -41,7 +41,13 @@ class CallTimeHintsCollector(
     }
 
     private fun addHint(expression: KtCallExpression, sink: InlayHintsSink, timePerCall: Nanoseconds) {
-        val text = "${(timePerCall.ns / 10000) / 100.0}ms"
+        val displayedTime = "%.2f".format(timePerCall.ns / 1000000.0)
+
+        // Don't display a hint if the reported time would be `0.00ms`. This is technically different from not
+        // displaying a hint due to a complete lack of data, but that is not sufficiently apparent to the user.
+        if (displayedTime == "0.00") {
+            return
+        }
 
         // Prefer to place the hint at the end of the value argument list, but before any lambda arguments (i.e.
         // trailing lambdas). Trailing lambdas often span multiple lines and are visually distinguished from the "head"
@@ -50,7 +56,7 @@ class CallTimeHintsCollector(
             expression.valueArgumentList?.endOffset ?:
             expression.calleeExpression?.endOffset ?:
             expression.endOffset
-        val basePresentation = factory.roundWithBackgroundAndSmallInset(factory.smallText(text))
+        val basePresentation = factory.roundWithBackgroundAndSmallInset(factory.smallText("${displayedTime}ms"))
 
         // Give the user direct access to the inlay hints settings with a right-click menu.
         val presentation = MenuOnClickPresentation(basePresentation, project) { listOf(ShowInlayHintsSettings()) }
