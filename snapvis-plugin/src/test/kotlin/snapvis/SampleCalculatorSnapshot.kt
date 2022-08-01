@@ -27,15 +27,15 @@ object SampleCalculatorSnapshot {
         // call instances are discovered in the snapshot and the execution times are consistently calculated.
         val callTime1 = metrics.get("calculator.Tokenizer").get(61, "toDoubleOrNull")
         assertNotNull(callTime1)
-        assertEquals(MethodCallTime("toDoubleOrNull", Nanoseconds(2581300)), callTime1)
+        assertEquals(MethodCallTime("toDoubleOrNull", Nanoseconds(207065)), callTime1)
 
-        val callTime2 = metrics.get("calculator.EvaluatorKt").get(37, "addLast")
+        val callTime2 = metrics.get("calculator.EvaluatorKt").get(27, "removeLast")
         assertNotNull(callTime2)
-        assertEquals(MethodCallTime("addLast", Nanoseconds(253140)), callTime2)
+        assertEquals(MethodCallTime("removeLast", Nanoseconds(103637)), callTime2)
 
         val callTime3 = metrics.get("calculator.CalculatorKt").get(13, "calculate")
         assertNotNull(callTime3)
-        assertEquals(MethodCallTime("calculate", Nanoseconds(138848335)), callTime3)
+        assertEquals(MethodCallTime("calculate", Nanoseconds(17486188)), callTime3)
     }
 
     /**
