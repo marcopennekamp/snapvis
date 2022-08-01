@@ -31,3 +31,13 @@ fun freshActionEvent(project: Project?): AnActionEvent = AnActionEvent.createFro
     Presentation(),
     { dataId -> if (CommonDataKeys.PROJECT.`is`(dataId)) project else null },
 )
+
+/**
+ * Asserts that dialogs shown by [Messages.showDialog] contain a message [expectedMessage].
+ */
+fun expectMessageDialog(expectedMessage: String) {
+    TestDialogManager.setTestDialog {
+        BasePlatformTestCase.assertEquals(expectedMessage, it)
+        Messages.OK
+    }
+}

@@ -3,6 +3,7 @@ package snapvis.actions
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.fileChooser.FileChooser
+import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
@@ -10,8 +11,6 @@ import com.intellij.openapi.vfs.VirtualFile
 import snapvis.SnapvisBundle
 import snapvis.extractors.Extractors
 import snapvis.metrics.getMetricsService
-
-// TODO: Write a simple test.
 import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.extension
@@ -28,11 +27,7 @@ class LoadSnapshotAction : AnAction() {
     }
 
     private fun chooseSnapshot(project: Project, callback: (VirtualFile) -> Unit) {
-        val descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor().withFileFilter { file ->
-            val extension = file.extension
-            extension != null && Extractors.supportsExtension(extension.lowercase())
-        }
-        FileChooser.chooseFile(descriptor, project, null, callback)
+        FileChooser.chooseFile(FILE_CHOOSER_DESCRIPTOR, project, null, callback)
     }
 
     fun extractSnapshot(project: Project, filePath: Path) {
@@ -64,5 +59,13 @@ class LoadSnapshotAction : AnAction() {
             SnapvisBundle.getMessage("snapvis.actions.LoadSnapshotAction.success.title"),
             Messages.getInformationIcon(),
         )
+    }
+
+    companion object {
+        val FILE_CHOOSER_DESCRIPTOR: FileChooserDescriptor =
+            FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor().withFileFilter { file ->
+                val extension = file.extension
+                extension != null && Extractors.supportsExtension(extension.lowercase())
+            }
     }
 }

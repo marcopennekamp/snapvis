@@ -1,11 +1,10 @@
 package snapvis.actions
 
-import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import snapvis.SampleCalculatorSnapshot
-import snapvis.metrics.getMetricsService
+import snapvis.SnapvisPlatformTestCase
 import kotlin.test.Test
 
-class ClearSnapshotActionTest : BasePlatformTestCase() {
+class ClearSnapshotActionTest : SnapvisPlatformTestCase() {
     @Test
     fun testUpdateHidden() {
         val action = ClearSnapshotAction()
@@ -20,9 +19,9 @@ class ClearSnapshotActionTest : BasePlatformTestCase() {
     @Test
     fun testUpdateVisibleDisabled() {
         val action = ClearSnapshotAction()
-        val event = freshActionEvent(myFixture.project)
+        val event = freshActionEvent(project)
 
-        // `update` should show but disables the action if a project but no call metrics are defined.
+        // `update` should show but disable the action if a project but no call metrics are defined.
         action.update(event)
         assert(event.presentation.isVisible)
         assert(!event.presentation.isEnabled)
@@ -31,8 +30,8 @@ class ClearSnapshotActionTest : BasePlatformTestCase() {
     @Test
     fun testUpdateVisibleEnabled() {
         val action = ClearSnapshotAction()
-        val event = freshActionEvent(myFixture.project)
-        SampleCalculatorSnapshot.load(myFixture.project)
+        val event = freshActionEvent(project)
+        SampleCalculatorSnapshot.load(project)
 
         // `update` should show and enable the action if a project and call metrics are defined.
         action.update(event)
@@ -43,21 +42,20 @@ class ClearSnapshotActionTest : BasePlatformTestCase() {
     @Test
     fun testActionPerformed() {
         val action = ClearSnapshotAction()
-        val event = freshActionEvent(myFixture.project)
-        SampleCalculatorSnapshot.load(myFixture.project)
+        val event = freshActionEvent(project)
+        SampleCalculatorSnapshot.load(project)
 
         // `actionPerformed` should clear the call metrics.
         action.actionPerformed(event)
-        assertNull(myFixture.project.getMetricsService().callMetrics)
+        assertNull(metricsService.callMetrics)
     }
 
     @Test
     fun testActionPerformedAlreadyCleared() {
         val action = ClearSnapshotAction()
-        val event = freshActionEvent(myFixture.project)
+        val event = freshActionEvent(project)
 
         // `actionPerformed` should work even if the call metrics are already cleared.
-        val metricsService = myFixture.project.getMetricsService()
         assertNull(metricsService.callMetrics)
         action.actionPerformed(event)
         assertNull(metricsService.callMetrics)
@@ -67,15 +65,15 @@ class ClearSnapshotActionTest : BasePlatformTestCase() {
     fun testActionPerformedNoProject() {
         val action = ClearSnapshotAction()
         val event = freshActionEvent(null)
-        SampleCalculatorSnapshot.load(myFixture.project)
+        SampleCalculatorSnapshot.load(project)
 
         // `actionPerformed` should do nothing if there is no project.
         action.actionPerformed(event)
-        assertNotNull(myFixture.project.getMetricsService().callMetrics)
+        assertNotNull(metricsService.callMetrics)
     }
 
     override fun tearDown() {
-        SampleCalculatorSnapshot.clear(myFixture.project)
+        SampleCalculatorSnapshot.clear(project)
         super.tearDown()
     }
 }
