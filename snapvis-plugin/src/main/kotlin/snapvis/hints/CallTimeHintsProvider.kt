@@ -9,16 +9,11 @@ import javax.swing.JComponent
 
 @Suppress("UnstableApiUsage")
 class CallTimeHintsProvider : InlayHintsProvider<NoSettings> {
-
-    // TODO: Bug? When using the settings key `snapvis.hints.call_time`, the IDE at startup tries to get a description
-    //       during initialization from the KotlinBundle (!), NOT the SnapvisBundle. The workaround of using a key
-    //       that's contained in the KotlinBundle is untenable for production usage of the plugin. Either I am missing
-    //       something about resource bundles, or this is a bug if nobody has actually written a third-party plugin
-    //       that provides inlay hints for a language.
-    override val key: SettingsKey<NoSettings> = SettingsKey("snapvis.hints.call_time")
-    //override val key: SettingsKey<NoSettings> = SettingsKey("fix.make.data.class")
-    override val name: String = SnapvisBundle.getMessage("snapvis.hints.call_time")
-    override val previewText: String? = null // TODO: Provide a preview in the settings.
+    override val key: SettingsKey<NoSettings> = SettingsKey("snapvis.hints.call_time.name")
+    override val name: String = SnapvisBundle.getMessage("snapvis.hints.call_time.name")
+    override val description: String
+        get() = SnapvisBundle.getMessage("snapvis.hints.call_time.description")
+    override val previewText: String? = null
 
     override fun createSettings(): NoSettings = NoSettings()
 
@@ -32,5 +27,4 @@ class CallTimeHintsProvider : InlayHintsProvider<NoSettings> {
     override fun createConfigurable(settings: NoSettings): ImmediateConfigurable = object : ImmediateConfigurable {
         override fun createComponent(listener: ChangeListener): JComponent = panel { }
     }
-
 }
