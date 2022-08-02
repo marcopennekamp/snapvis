@@ -6,7 +6,7 @@ import java.nio.file.Path
 interface Extractor {
     /**
      * Extracts profiling data from a file [filePath] and summarizes method execution time in the returned
-     * [CallMetrics].
+     * [CallMetrics]. Method calls with a measured call time of 0ns should be omitted from the results.
      */
     fun extract(filePath: Path): CallMetrics
 }

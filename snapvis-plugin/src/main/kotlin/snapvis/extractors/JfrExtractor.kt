@@ -37,8 +37,9 @@ object JfrExtractor : Extractor {
      *     This is especially egregious in tight benchmark loops, where the same method is called millions of times and
      *     virtually every sample will contain the method call.
      *
-     * Both of these issues are remedied with a correctly chosen sampling interval. This choice strongly depends on the
-     * program being profiled.
+     * Both of these issues are lessened with a correctly chosen sampling interval. This choice strongly depends on the
+     * program being profiled. Profiling some especially short programs or tight benchmark loops might not produce
+     * useful call time data using a sampling approach at all.
      */
     override fun extract(filePath: Path): CallMetrics = JfrReader(filePath.toString()).use { reader ->
         JfrExtractorImpl(reader).extract()
@@ -68,18 +69,16 @@ private class MethodCallTotals(val methodCall: MethodCall) {
 
 private class JfrExtractorImpl(val reader: JfrReader) {
 
-    fun extract(): CallMetrics = convertToMetrics(getTotalCallTimes())
+    fun extract(): CallMetrics = convertToMetrics(getTotalsByCall())
 
     /**
-     * [getTotalCallTimes] collects the approximate total time and number of times a method was called from all
+     * [getTotalsByCall] collects the approximate total time and number of times a method was called from all
      * [ExecutionSample]s available in the JFR file.
-     *
-     * TODO: Do we need to incorporate thread state? (Maybe another tradeoff, depends.)
      */
-    private fun getTotalCallTimes(): Map<MethodCall, MethodCallTotals> {
+    private fun getTotalsByCall(): Map<MethodCall, MethodCallTotals> {
         val totalsByCall = HashMap<MethodCall, MethodCallTotals>()
 
-        // This map keeps track of the most recently recorded execution sample and metho call stack per thread ID. The
+        // This map keeps track of the most recently recorded execution sample and method call stack per thread ID. The
         // snapshot may contain data for multiple threads which each have their own stack traces.
         data class SampleInfo(val sample: ExecutionSample, val methodCallStack: MethodCallStack)
         val previousByThread = HashMap<Int, SampleInfo>()
@@ -104,11 +103,11 @@ private class JfrExtractorImpl(val reader: JfrReader) {
 
                     // Native method callers should be ignored as the plugin isn't able to annotate native code.
                     if (!isNativeMethod(methodCall.callerId, methodCall.callerType)) {
-                        val metric = totalsByCall.getOrPut(methodCall) { MethodCallTotals(methodCall) }
+                        val totals = totalsByCall.getOrPut(methodCall) { MethodCallTotals(methodCall) }
                         if (index < commonPrefixSize) {
-                            metric.totalTime += duration // Method call continues
+                            totals.totalTime += duration // Method call continues
                         } else {
-                            metric.callCount += 1 // Method call begins
+                            totals.callCount += 1 // Method call begins
                         }
                     }
                 }
@@ -123,10 +122,10 @@ private class JfrExtractorImpl(val reader: JfrReader) {
     private fun reformat(stackTrace: StackTrace): MethodCallStack {
         val entries = ArrayList<MethodCall>(stackTrace.methods.size)
 
-        // The stack trace's top element is last, so we are iterating backwards. Because a method ID in a stack trace
-        // points to the *caller*, we need the next element of the stack trace to get the *callee* method ID. For the
-        // first element of the stack trace, this callee ID doesn't exist, so we are excluding it from the result stack
-        // trace.
+        // The stack trace's top element is last in the list, so we are iterating backwards. Because a method ID in a
+        // stack trace points to the *caller*, we need the next element of the stack trace to get the *callee* method
+        // ID. For the bottom element of the stack trace, this callee ID doesn't exist, so we are excluding it from the
+        // result stack trace.
         for (index in stackTrace.methods.size - 1 downTo 1) {
             entries.add(
                 MethodCall(
@@ -144,17 +143,17 @@ private class JfrExtractorImpl(val reader: JfrReader) {
         return MethodCallStack(entries)
     }
 
-    private fun convertToMetrics(totalCallTimes: Map<MethodCall, MethodCallTotals>): CallMetrics {
+    private fun convertToMetrics(totalsByCall: Map<MethodCall, MethodCallTotals>): CallMetrics {
         val metrics = CallMetrics()
 
-        for (total in totalCallTimes.values) {
-            val callInfo = total.methodCall
+        for (totals in totalsByCall.values) {
+            val callInfo = totals.methodCall
             val callerClassName = normalizeClassName(getMethodClassName(callInfo.callerId))
             val classMetrics = metrics.get(callerClassName)
 
-            if (total.callCount > 0) {
+            if (totals.callCount > 0 && totals.totalTime.ns > 0) {
                 val methodName = getMethodName(callInfo.calleeId)
-                val timePerCall = total.totalTime / total.callCount
+                val timePerCall = totals.totalTime / totals.callCount
                 classMetrics.add(callInfo.line, MethodCallTime(methodName, timePerCall))
             }
         }

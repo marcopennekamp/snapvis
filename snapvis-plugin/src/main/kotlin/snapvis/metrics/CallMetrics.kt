@@ -2,8 +2,6 @@ package snapvis.metrics
 
 import snapvis.util.Nanoseconds
 
-// TODO: Write simple tests?
-
 /**
  * Contains all [MethodCallTime]s per class via [ClassCallMetrics].
  */
@@ -17,7 +15,7 @@ class CallMetrics {
 }
 
 /**
- * Contains the [MethodCallTime]s that occur in a given class *file* on each line. A line may contain multiple metrics.
+ * Contains the [MethodCallTime]s that occur in a given Kotlin class on each line. A line may contain multiple metrics.
  */
 class ClassCallMetrics {
     private val byLine: MutableMap<Int, List<MethodCallTime>> = HashMap()
@@ -38,7 +36,4 @@ class ClassCallMetrics {
     }
 }
 
-/**
- * [MethodCallTime] contains the time per call in nanoseconds that a method
- */
 data class MethodCallTime(val methodName: String, val timePerCall: Nanoseconds)

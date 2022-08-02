@@ -11,10 +11,10 @@ import snapvis.hints.CallTimeHints
 @Service
 class MetricsService(val project: Project) {
     /**
-     * The [CallMetrics] of the service are always defined, but only populated once the user opens a snapshot. Until
-     * then, the metrics will simply be `null`.
+     * [callMetrics] are only defined once the user has loaded a snapshot. Clearing a snapshot removes these call
+     * metrics again.
      *
-     * Immediately reloads call time hints when this property is set to a new value.
+     * The setter immediately reloads all call time hints.
      */
     var callMetrics: CallMetrics? = null
         set(value) {
