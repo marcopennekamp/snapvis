@@ -4,7 +4,6 @@ TODO:
 - Add an architecture overview.
 - Do we have to support operators separately from function calls?
   - Maybe define this as a limitation/trade-off.
-- Test inner classes vis-à-vis class name handling.
 
 
 
