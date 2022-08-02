@@ -133,8 +133,6 @@ private class JfrExtractorImpl(val reader: JfrReader) {
                     stackTrace.methods[index],
                     stackTrace.types[index],
                     // A location is an aggregate of two 4-byte integers: Line number and bytecode index.
-                    // TODO: Maybe use components from "Kotlin show bytecode" and the location's bytecode index to find
-                    //       the column number of the method call.
                     stackTrace.locations[index] ushr 16,
                 )
             )
