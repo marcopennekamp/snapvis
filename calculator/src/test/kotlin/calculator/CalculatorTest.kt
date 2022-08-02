@@ -29,4 +29,10 @@ class CalculatorTest {
         assertEquals(null, calculate("1 2 + 3 - 4 * 5 / /"))
         assertEquals(null, calculate("- 2 * / 3.14159265 +"))
     }
+
+    @Test
+    fun `generate generates simple expressions`() {
+        assertEquals("1 2 + 3 + 4 + 5 + ", generate(5, { it + 1 }, { "+" }))
+        assertEquals("1 3 * 5 / 7 * 9 / 11 * ", generate(6, { it * 2 + 1 }, { i -> if (i % 2 == 0) "*" else "/" }))
+    }
 }
