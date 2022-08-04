@@ -48,14 +48,14 @@ Snapvis provides IntelliJ run and test configurations in the folder `.run`:
 
 ## Architecture
 
-The heart of the plugin is a class [CallMetrics](https://github.com/marcopennekamp/snapvis/blob/main/snapvis-plugin/src/main/kotlin/snapvis/metrics/CallMetrics.kt) which holds all method call times by line and class. It's managed for each project by the [MetricsService](https://github.com/marcopennekamp/snapvis/blob/main/snapvis-plugin/src/main/kotlin/snapvis/metrics/MetricsService.kt).
+The heart of the plugin is a class [CallMetrics](src/main/kotlin/snapvis/metrics/CallMetrics.kt) which holds all method call times by line and class. It's managed for each project by the [MetricsService](src/main/kotlin/snapvis/metrics/MetricsService.kt).
 
 The plugin then approaches CallMetrics from two angles:
 
-1. An [Extractor](https://github.com/marcopennekamp/snapvis/blob/main/snapvis-plugin/src/main/kotlin/snapvis/extractors/Extractor.kt)'s job is to read and analyze a CPU snapshot (e.g. a JFR snapshot) to *produce* call metrics.
-2. The [CallTimeHintsProvider](https://github.com/marcopennekamp/snapvis/blob/main/snapvis-plugin/src/main/kotlin/snapvis/hints/CallTimeHintsProvider.kt) and [CallTimeHintsCollector](https://github.com/marcopennekamp/snapvis/blob/main/snapvis-plugin/src/main/kotlin/snapvis/hints/CallTimeHintsCollector.kt) *use* CallMetrics from the MetricsService to show call time hints in project files.
+1. An [Extractor](src/main/kotlin/snapvis/extractors/Extractor.kt)'s job is to read and analyze a CPU snapshot (e.g. a JFR snapshot) to *produce* call metrics.
+2. The [CallTimeHintsProvider](src/main/kotlin/snapvis/hints/CallTimeHintsProvider.kt) and [CallTimeHintsCollector](src/main/kotlin/snapvis/hints/CallTimeHintsCollector.kt) *use* CallMetrics from the MetricsService to show call time hints in project files.
 
-The actions [LoadSnapshotAction](https://github.com/marcopennekamp/snapvis/blob/main/snapvis-plugin/src/main/kotlin/snapvis/actions/LoadSnapshotAction.kt) and [ClearSnapshotAction](https://github.com/marcopennekamp/snapvis/blob/main/snapvis-plugin/src/main/kotlin/snapvis/actions/ClearSnapshotAction.kt) interact with the MetricsService to add or clear CallMetrics for the current project. LoadSnapshotAction additionally needs access to an Extractor so that CallMetrics can be produced from a snapshot.
+The actions [LoadSnapshotAction](src/main/kotlin/snapvis/actions/LoadSnapshotAction.kt) and [ClearSnapshotAction](src/main/kotlin/snapvis/actions/ClearSnapshotAction.kt) interact with the MetricsService to add or clear CallMetrics for the current project. LoadSnapshotAction additionally needs access to an Extractor so that CallMetrics can be produced from a snapshot.
 
 Extractor is an interface, which makes it easy to add extractors for new snapshot formats. One simply has to define a new extractor and add a mapping to `Extractors.extractorByExtension`.
 
