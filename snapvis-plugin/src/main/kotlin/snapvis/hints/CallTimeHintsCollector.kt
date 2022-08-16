@@ -22,24 +22,22 @@ class CallTimeHintsCollector(
 ) : FactoryInlayHintsCollector(editor) {
     override fun collect(element: PsiElement, editor: Editor, sink: InlayHintsSink): Boolean {
         when (element) {
-            is KtCallExpression -> {
-                val className = getContainingClassName(element, element.containingKtFile)
-                val methodName = element.getCallNameExpression()?.getReferencedName()
-                if (className != null && methodName != null) {
-                    project.getMetricsService().callMetrics?.let { callMetrics ->
-                        callMetrics.get(className).get(element.getLineNumber() + 1, methodName)?.let {
-                            methodCallTime -> addHint(element, sink, methodCallTime.timePerCall)
-                        }
-                    }
-                }
-            }
+            is KtCallExpression -> collectCallExpression(element, sink)
             else -> { }
         }
         return true
     }
 
+    private fun collectCallExpression(expression: KtCallExpression, sink: InlayHintsSink) {
+        val className = getContainingClassName(expression, expression.containingKtFile) ?: return
+        val methodName = expression.getCallNameExpression()?.getReferencedName() ?: return
+        val callMetrics = project.getMetricsService().callMetrics ?: return
+        val methodCallTime = callMetrics.get(className).get(expression.getLineNumber() + 1, methodName) ?: return
+        addHint(expression, sink, methodCallTime.timePerCall)
+    }
+
     private fun addHint(expression: KtCallExpression, sink: InlayHintsSink, timePerCall: Nanoseconds) {
-        val displayedTime = "%.2f".format(timePerCall.ns / 1000000.0)
+        val displayedTime = "%.2f".format(timePerCall.toMilliseconds)
 
         // Don't display a hint if the reported time would be `0.00ms`. This is technically different from not
         // displaying a hint due to a complete lack of data, but that is not sufficiently apparent to the user.

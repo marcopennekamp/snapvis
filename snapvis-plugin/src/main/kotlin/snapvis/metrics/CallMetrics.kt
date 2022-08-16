@@ -18,7 +18,7 @@ class CallMetrics {
  * Contains the [MethodCallTime]s that occur in a given Kotlin class on each line. A line may contain multiple metrics.
  */
 class ClassCallMetrics {
-    private val byLine: MutableMap<Int, List<MethodCallTime>> = HashMap()
+    private val byLine: MutableMap<Int, MutableList<MethodCallTime>> = HashMap()
 
     private fun get(line: Int): List<MethodCallTime> = byLine.getOrDefault(line, emptyList())
 
@@ -32,7 +32,7 @@ class ClassCallMetrics {
      * Adds [metric] to the metrics on [line].
      */
     fun add(line: Int, metric: MethodCallTime) {
-        byLine.merge(line, listOf(metric), Collection<MethodCallTime>::plus)
+        byLine.getOrPut(line) { mutableListOf() }.add(metric)
     }
 }
 

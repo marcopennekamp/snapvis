@@ -23,7 +23,7 @@ import org.jetbrains.kotlin.psi.psiUtil.containingClass
  * necessarily cover all edge cases.
  */
 fun normalizeClassName(jvmClassName: String): String {
-    val parts = jvmClassName.replace('/', '.').split('.')
+    val parts = jvmClassName.split('/', '.')
     if (parts.isEmpty()) return ""
     val normalizedSimpleName = parts.last().takeWhile { it != '$' }
     return (parts.init() + normalizedSimpleName).joinToString(".")

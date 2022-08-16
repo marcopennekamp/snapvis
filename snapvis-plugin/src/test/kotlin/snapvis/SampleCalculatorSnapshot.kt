@@ -7,7 +7,7 @@ import snapvis.metrics.CallMetrics
 import snapvis.metrics.MethodCallTime
 import snapvis.metrics.MetricsService
 import snapvis.metrics.getMetricsService
-import snapvis.util.Nanoseconds
+import snapvis.util.ns
 import java.nio.file.Path
 import kotlin.io.path.extension
 import kotlin.test.assertEquals
@@ -31,15 +31,15 @@ object SampleCalculatorSnapshot {
         // call instances are discovered in the snapshot and the execution times are consistently calculated.
         val callTime1 = metrics.get("calculator.Tokenizer").get(61, "toDoubleOrNull")
         assertNotNull(callTime1)
-        assertEquals(MethodCallTime("toDoubleOrNull", Nanoseconds(207065)), callTime1)
+        assertEquals(MethodCallTime("toDoubleOrNull", 207065.ns), callTime1)
 
         val callTime2 = metrics.get("calculator.EvaluatorKt").get(27, "removeLast")
         assertNotNull(callTime2)
-        assertEquals(MethodCallTime("removeLast", Nanoseconds(103637)), callTime2)
+        assertEquals(MethodCallTime("removeLast", 103637.ns), callTime2)
 
         val callTime3 = metrics.get("calculator.CalculatorKt").get(13, "calculate")
         assertNotNull(callTime3)
-        assertEquals(MethodCallTime("calculate", Nanoseconds(17486188)), callTime3)
+        assertEquals(MethodCallTime("calculate", 17486188.ns), callTime3)
     }
 
     /**

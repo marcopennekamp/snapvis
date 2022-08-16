@@ -16,8 +16,7 @@ class ClearSnapshotAction : AnAction() {
     }
 
     override fun actionPerformed(event: AnActionEvent) {
-        event.project?.let { project ->
-            project.getMetricsService().callMetrics = null
-        }
+        val project = event.project ?: return
+        project.getMetricsService().callMetrics = null
     }
 }

@@ -21,9 +21,8 @@ class LoadSnapshotAction : AnAction() {
     }
 
     override fun actionPerformed(event: AnActionEvent) {
-        event.project?.let { project ->
-            chooseSnapshot(project) { extractSnapshot(project, it.toNioPath()) }
-        }
+        val project = event.project ?: return
+        chooseSnapshot(project) { extractSnapshot(project, it.toNioPath()) }
     }
 
     private fun chooseSnapshot(project: Project, callback: (VirtualFile) -> Unit) {

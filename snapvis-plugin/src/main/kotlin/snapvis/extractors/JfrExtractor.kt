@@ -11,6 +11,7 @@ import snapvis.metrics.MethodCallTime
 import snapvis.util.Nanoseconds
 import snapvis.util.commonPrefixSize
 import snapvis.util.normalizeClassName
+import snapvis.util.ns
 import java.nio.charset.Charset
 import java.nio.file.Path
 
@@ -64,7 +65,7 @@ private data class MethodCallStack(val entries: List<MethodCall>) : List<MethodC
  */
 private class MethodCallTotals(val methodCall: MethodCall) {
     var callCount: Int = 0
-    var totalTime: Nanoseconds = Nanoseconds(0)
+    var totalTime: Nanoseconds = 0.ns
 }
 
 private class JfrExtractorImpl(val reader: JfrReader) {
@@ -174,6 +175,6 @@ private class JfrExtractorImpl(val reader: JfrReader) {
      */
     private fun nameAsString(array: ByteArray): String = array.toString(Charset.forName("UTF-8"))
 
-    private fun ticksToNanoseconds(ticks: Long): Nanoseconds = Nanoseconds(ticks * 1000000000 / reader.ticksPerSec)
+    private fun ticksToNanoseconds(ticks: Long): Nanoseconds = (ticks * 1_000_000_000 / reader.ticksPerSec).ns
 
 }
